@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +13,14 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
             color: #333;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -28,38 +29,38 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
+
         header {
             background: #2c3e50;
             color: white;
             padding: 25px;
             text-align: center;
         }
-        
+
         h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
         }
-        
+
         .description {
             font-size: 1.1rem;
             opacity: 0.9;
             max-width: 600px;
             margin: 0 auto;
         }
-        
+
         .upload-section {
             padding: 25px;
             background: #ecf0f1;
             text-align: center;
         }
-        
+
         .file-input-container {
             position: relative;
             display: inline-block;
             margin: 20px 0;
         }
-        
+
         .file-input {
             position: absolute;
             left: 0;
@@ -69,7 +70,7 @@
             height: 100%;
             cursor: pointer;
         }
-        
+
         .file-input-label {
             display: inline-block;
             padding: 15px 30px;
@@ -80,17 +81,17 @@
             font-weight: 600;
             transition: background 0.3s;
         }
-        
+
         .file-input-label:hover {
             background: #2980b9;
         }
-        
+
         .file-name {
             margin-top: 10px;
             font-size: 0.9rem;
             color: #7f8c8d;
         }
-        
+
         .search-section {
             padding: 20px;
             background: #fff;
@@ -101,7 +102,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .search-input {
             flex: 1;
             min-width: 300px;
@@ -111,13 +112,13 @@
             font-size: 1.1rem;
             transition: border-color 0.3s;
         }
-        
+
         .search-input:focus {
             outline: none;
             border-color: #3498db;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
-        
+
         .search-btn {
             background: #3498db;
             color: white;
@@ -129,11 +130,11 @@
             font-weight: 600;
             transition: background 0.3s;
         }
-        
+
         .search-btn:hover {
             background: #2980b9;
         }
-        
+
         .instructions {
             background: #fff;
             padding: 20px;
@@ -143,25 +144,25 @@
             text-align: left;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
-        
+
         .instructions h3 {
             color: #2c3e50;
             margin-bottom: 15px;
         }
-        
+
         .instructions ol {
             padding-left: 20px;
             line-height: 1.6;
         }
-        
+
         .instructions li {
             margin-bottom: 10px;
         }
-        
+
         .results-section {
             padding: 20px;
         }
-        
+
         .plate-summary {
             margin-bottom: 30px;
             padding: 20px;
@@ -169,7 +170,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
-        
+
         .plate-header {
             display: flex;
             justify-content: space-between;
@@ -178,13 +179,13 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #e1e8ed;
         }
-        
+
         .plate-number {
             font-size: 1.4rem;
             font-weight: 700;
             color: #e74c3c;
         }
-        
+
         .plate-total {
             font-size: 1.3rem;
             font-weight: 700;
@@ -193,7 +194,7 @@
             padding: 8px 15px;
             border-radius: 6px;
         }
-        
+
         .transaction-table {
             width: 100%;
             border-collapse: collapse;
@@ -202,7 +203,7 @@
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .transaction-table th {
             background: #34495e;
             color: white;
@@ -210,48 +211,48 @@
             padding: 16px;
             font-weight: 600;
         }
-        
+
         .transaction-table td {
             padding: 14px 16px;
             border-bottom: 1px solid #ecf0f1;
         }
-        
+
         .transaction-table tr:nth-child(even) {
             background: #f8f9fa;
         }
-        
+
         .transaction-table tr:hover {
             background: #e8f4fc;
         }
-        
+
         .transaction-id {
             font-weight: 600;
             color: #2c3e50;
         }
-        
+
         .location {
             max-width: 300px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .transaction-amount {
             font-weight: 600;
             color: #27ae60;
         }
-        
+
         .negative-amount {
             color: #e74c3c;
         }
-        
+
         .no-results {
             text-align: center;
             padding: 40px;
             color: #7f8c8d;
             font-size: 1.2rem;
         }
-        
+
         .summary-section {
             background: #2c3e50;
             color: white;
@@ -259,20 +260,20 @@
             margin-top: 20px;
             border-radius: 8px;
         }
-        
+
         .summary-title {
             font-size: 1.4rem;
             margin-bottom: 15px;
             text-align: center;
         }
-        
+
         .summary-stats {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             gap: 15px;
         }
-        
+
         .stat-box {
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
@@ -280,25 +281,25 @@
             text-align: center;
             min-width: 150px;
         }
-        
+
         .stat-value {
             font-size: 1.8rem;
             font-weight: 700;
             margin: 5px 0;
         }
-        
+
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.8;
         }
-        
+
         .plate-list {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 15px;
         }
-        
+
         .plate-chip {
             background: #3498db;
             color: white;
@@ -308,41 +309,43 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         .plate-chip:hover {
             background: #2980b9;
         }
-        
+
         @media (max-width: 768px) {
             .transaction-table {
                 display: block;
                 overflow-x: auto;
             }
-            
+
             .plate-header {
                 flex-direction: column;
                 gap: 15px;
                 align-items: flex-start;
             }
-            
+
             .summary-stats {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .search-input {
                 min-width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Excel Transaction Viewer</h1>
-            <p class="description">Upload an Excel file to view transactions grouped by license plate with total amounts</p>
+            <p class="description">Upload an Excel file to view transactions grouped by license plate with total amounts
+            </p>
         </header>
-        
+
         <section class="upload-section">
             <div class="file-input-container">
                 <label for="fileInput" class="file-input-label">Choose Excel File</label>
@@ -350,12 +353,13 @@
             </div>
             <div class="file-name" id="fileName">No file chosen</div>
         </section>
-        
+
         <section class="search-section" id="searchSection" style="display: none;">
-            <input type="text" class="search-input" id="plateSearch" placeholder="Enter license plate number (e.g., TX - VSN2039)">
+            <input type="text" class="search-input" id="plateSearch"
+                placeholder="Enter license plate number (e.g., TX - VSN2039)">
             <button class="search-btn" id="searchBtn">Search Transactions</button>
         </section>
-        
+
         <section class="instructions">
             <h3>How to use this tool:</h3>
             <ol>
@@ -366,7 +370,7 @@
                 <li>The application will show the total transaction amount for the searched license plate</li>
             </ol>
         </section>
-        
+
         <section class="results-section" id="resultsSection">
             <div class="no-results">Upload an Excel file to view transaction data</div>
         </section>
@@ -376,17 +380,17 @@
         // Global variable to store all transactions data
         let allTransactionsData = [];
         let transactionsByPlate = {};
-        
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             const fileInput = document.getElementById('fileInput');
             const fileName = document.getElementById('fileName');
             const resultsSection = document.getElementById('resultsSection');
             const searchSection = document.getElementById('searchSection');
             const plateSearch = document.getElementById('plateSearch');
             const searchBtn = document.getElementById('searchBtn');
-            
+
             // Update file name when a file is selected
-            fileInput.addEventListener('change', function() {
+            fileInput.addEventListener('change', function () {
                 if (this.files.length > 0) {
                     fileName.textContent = this.files[0].name;
                     processExcelFile(this.files[0]);
@@ -394,107 +398,114 @@
                     fileName.textContent = 'No file chosen';
                 }
             });
-            
+
             // Add event listener to search button
             searchBtn.addEventListener('click', searchTransactions);
-            
+
             // Add event listener for Enter key in search input
-            plateSearch.addEventListener('keyup', function(event) {
+            plateSearch.addEventListener('keyup', function (event) {
                 if (event.key === 'Enter') {
                     searchTransactions();
                 }
             });
-            
+
             function processExcelFile(file) {
                 const reader = new FileReader();
-                
-                reader.onload = function(e) {
+
+                reader.onload = function (e) {
                     try {
                         const data = new Uint8Array(e.target.result);
                         const workbook = XLSX.read(data, { type: 'array' });
-                        
+
                         // Get the first worksheet
                         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                        
+
                         // Convert to JSON
                         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                        
+
                         // Store the data globally
                         allTransactionsData = jsonData;
-                        
+
                         // Process the data
                         processTransactionData(jsonData);
-                        
+
                         // Show the search section
                         searchSection.style.display = 'flex';
                     } catch (error) {
                         resultsSection.innerHTML = `<div class="no-results">Error processing file: ${error.message}</div>`;
                     }
                 };
-                
-                reader.onerror = function() {
+
+                reader.onerror = function () {
                     resultsSection.innerHTML = '<div class="no-results">Error reading file. Please try again.</div>';
                 };
-                
+
                 reader.readAsArrayBuffer(file);
             }
-            
+
             function processTransactionData(data) {
                 if (data.length === 0) {
                     resultsSection.innerHTML = '<div class="no-results">No data found in the Excel file.</div>';
                     return;
                 }
-                
+
                 // Reset transactionsByPlate
                 transactionsByPlate = {};
                 let totalAmount = 0;
                 let totalTransactions = 0;
-                
+
                 data.forEach(row => {
+
+                    //Transaction entry date/time
+                    const entryDateTime = row['Transaction Entry Date/Time'] || row['Date'] || row['TIME'] || 'Unknown';
+                    //Transaction Exit time
+                    const exitDateTime = row['Transaction Exit Date/Time'] || row['Date'] || row['TIME'] || 'Unknown';
                     // Try to find the plate number in various possible column names
-                    const plate = row['Plate'] || row['plate'] || row['PLATE'] || 
-                                 row['Plate Number'] || row['License Plate'] || 
-                                 row['Plate No'] || 'Unknown';
-                    
+                    const plate = row['Plate'] || row['plate'] || row['PLATE'] ||
+                        row['Plate Number'] || row['License Plate'] ||
+                        row['Plate No'] || 'Unknown';
+
                     // Try to find the amount in various possible column names
-                    const amount = parseFloat(row['Transaction Amount'] || row['Amount'] || 
-                                     row['AMOUNT'] || row['Toll Amount'] || 
-                                     row['TransactionAmount'] || 0);
-                    
+                    const amount = parseFloat(row['Transaction Amount'] || row['Amount'] ||
+                        row['AMOUNT'] || row['Toll Amount'] ||
+                        row['TransactionAmount'] || 0);
+
                     // Try to find the transaction ID
-                    const id = row['Transaction ID'] || row['ID'] || row['TransactionID'] || 
-                               row['Txn ID'] || 'N/A';
-                    
+                    const id = row['Transaction ID'] || row['ID'] || row['TransactionID'] ||
+                        row['Txn ID'] || 'N/A';
+
                     // Try to find the location
-                    const location = row['Location'] || row['LOCATION'] || 
-                                    row['Toll Location'] || 'Unknown Location';
-                    
+                    const location = row['Location'] || row['LOCATION'] ||
+                        row['Toll Location'] || 'Unknown Location';
+
                     if (!transactionsByPlate[plate]) {
                         transactionsByPlate[plate] = {
                             transactions: [],
                             total: 0
                         };
                     }
-                    
+
                     transactionsByPlate[plate].transactions.push({
                         id: id,
                         location: location,
-                        amount: amount
+                        amount: amount,
+                        entryDateTime: entryDateTime,
+                        exitDateTime: exitDateTime
                     });
-                    
+
                     transactionsByPlate[plate].total += Math.abs(amount);
                     totalAmount += Math.abs(amount);
                     totalTransactions++;
                 });
-                
+
                 // Display all plates initially
                 displayAllPlates(totalTransactions, totalAmount);
             }
-            
+
             function displayAllPlates(totalTransactions, totalAmount) {
                 // Generate HTML for the results
                 let resultsHTML = '';
-                
+
                 // Add summary section
                 resultsHTML += `
                     <div class="summary-section">
@@ -515,7 +526,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 // Add plate list for quick searching
                 resultsHTML += `
                     <div class="plate-summary">
@@ -525,23 +536,23 @@
                         </div>
                         <div class="plate-list">
                 `;
-                
+
                 // Sort plates alphabetically
                 const sortedPlates = Object.keys(transactionsByPlate).sort();
-                
+
                 sortedPlates.forEach(plate => {
                     resultsHTML += `<div class="plate-chip" data-plate="${plate}">${plate}</div>`;
                 });
-                
+
                 resultsHTML += `
                         </div>
                     </div>
                 `;
-                
+
                 // Add transactions for each plate
                 for (const plate of sortedPlates) {
                     const plateData = transactionsByPlate[plate];
-                    
+
                     resultsHTML += `
                         <div class="plate-summary">
                             <div class="plate-header">
@@ -551,6 +562,8 @@
                             <table class="transaction-table">
                                 <thead>
                                     <tr>
+                                        <th>Entry Date & Time</th>
+                                        <th>Exit Date & Time</th>
                                         <th>Transaction ID</th>
                                         <th>Location</th>
                                         <th>Amount</th>
@@ -558,67 +571,69 @@
                                 </thead>
                                 <tbody>
                     `;
-                    
+
                     plateData.transactions.forEach(transaction => {
                         resultsHTML += `
                             <tr>
+                                <td class="entry-datetime">${transaction.entryDateTime}</td>
+                                <td class="exit-datetime">${transaction.exitDateTime}</td>
                                 <td class="transaction-id">${transaction.id}</td>
                                 <td class="location">${transaction.location}</td>
                                 <td class="transaction-amount negative-amount">$${Math.abs(transaction.amount).toFixed(2)}</td>
                             </tr>
                         `;
                     });
-                    
+
                     resultsHTML += `
                                 </tbody>
                             </table>
                         </div>
                     `;
                 }
-                
+
                 resultsSection.innerHTML = resultsHTML;
-                
+
                 // Add event listeners to plate chips
                 document.querySelectorAll('.plate-chip').forEach(chip => {
-                    chip.addEventListener('click', function() {
+                    chip.addEventListener('click', function () {
                         const plate = this.getAttribute('data-plate');
                         plateSearch.value = plate;
                         searchTransactions();
                     });
                 });
             }
-            
+
             function searchTransactions() {
                 const searchTerm = plateSearch.value.trim();
-                
+
                 if (!searchTerm) {
                     // If search is empty, show all plates
                     processTransactionData(allTransactionsData);
                     return;
                 }
-                
+
                 // Find matching plates
-                const matchingPlates = Object.keys(transactionsByPlate).filter(plate => 
+                const matchingPlates = Object.keys(transactionsByPlate).filter(plate =>
                     plate.toLowerCase().includes(searchTerm.toLowerCase())
                 );
-                
+
                 if (matchingPlates.length === 0) {
                     resultsSection.innerHTML = `<div class="no-results">No transactions found for license plate: ${searchTerm}</div>`;
                     return;
                 }
-                
+
                 // Calculate total for matching plates
                 let totalAmount = 0;
                 let totalTransactions = 0;
-                
+
                 matchingPlates.forEach(plate => {
                     totalAmount += transactionsByPlate[plate].total;
                     totalTransactions += transactionsByPlate[plate].transactions.length;
                 });
-                
+
                 // Generate HTML for the results
                 let resultsHTML = '';
-                
+
                 // Add summary section
                 resultsHTML += `
                     <div class="summary-section">
@@ -639,11 +654,11 @@
                         </div>
                     </div>
                 `;
-                
+
                 // Add transactions for each matching plate
                 for (const plate of matchingPlates) {
                     const plateData = transactionsByPlate[plate];
-                    
+
                     resultsHTML += `
                         <div class="plate-summary">
                             <div class="plate-header">
@@ -653,6 +668,8 @@
                             <table class="transaction-table">
                                 <thead>
                                     <tr>
+                                        <th>Entry Date & Time</th>
+                                        <th>Exit Date & Time</th>
                                         <th>Transaction ID</th>
                                         <th>Location</th>
                                         <th>Amount</th>
@@ -660,43 +677,45 @@
                                 </thead>
                                 <tbody>
                     `;
-                    
+
                     plateData.transactions.forEach(transaction => {
                         resultsHTML += `
                             <tr>
+                                <td class="entry-datetime">${transaction.entryDateTime}</td>
+                                <td class="exit-datetime">${transaction.exitDateTime}</td>
                                 <td class="transaction-id">${transaction.id}</td>
                                 <td class="location">${transaction.location}</td>
                                 <td class="transaction-amount negative-amount">$${Math.abs(transaction.amount).toFixed(2)}</td>
                             </tr>
                         `;
                     });
-                    
+
                     resultsHTML += `
                                 </tbody>
                             </table>
                         </div>
                     `;
                 }
-                
+
                 resultsSection.innerHTML = resultsHTML;
             }
-            
+
             // Add drag and drop functionality
             const uploadSection = document.querySelector('.upload-section');
-            
-            uploadSection.addEventListener('dragover', function(e) {
+
+            uploadSection.addEventListener('dragover', function (e) {
                 e.preventDefault();
                 this.style.background = '#d6dbdf';
             });
-            
-            uploadSection.addEventListener('dragleave', function() {
+
+            uploadSection.addEventListener('dragleave', function () {
                 this.style.background = '#ecf0f1';
             });
-            
-            uploadSection.addEventListener('drop', function(e) {
+
+            uploadSection.addEventListener('drop', function (e) {
                 e.preventDefault();
                 this.style.background = '#ecf0f1';
-                
+
                 if (e.dataTransfer.files.length) {
                     fileInput.files = e.dataTransfer.files;
                     fileName.textContent = e.dataTransfer.files[0].name;
@@ -706,4 +725,5 @@
         });
     </script>
 </body>
+
 </html>
