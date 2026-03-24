@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excel Transaction Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Smart Transaction Viewer - Toll & Parking Analytics</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -15,50 +16,50 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: #1e2a3e;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
             overflow: hidden;
         }
 
         header {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #1e3c4c 0%, #2c5368 100%);
             color: white;
-            padding: 25px;
+            padding: 28px 25px;
             text-align: center;
         }
 
         h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
         }
 
         .description {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
+            font-size: 1rem;
+            opacity: 0.85;
         }
 
         .upload-section {
-            padding: 25px;
-            background: #ecf0f1;
+            padding: 28px 25px;
+            background: #f8fafc;
             text-align: center;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .file-input-container {
             position: relative;
             display: inline-block;
-            margin: 20px 0;
+            margin: 12px 0;
         }
 
         .file-input {
@@ -73,657 +74,650 @@
 
         .file-input-label {
             display: inline-block;
-            padding: 15px 30px;
-            background: #3498db;
+            padding: 14px 32px;
+            background: #2c6e9e;
             color: white;
-            border-radius: 8px;
+            border-radius: 48px;
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
         .file-input-label:hover {
-            background: #2980b9;
+            background: #1e4a6e;
+            transform: translateY(-1px);
         }
 
         .file-name {
             margin-top: 10px;
-            font-size: 0.9rem;
-            color: #7f8c8d;
+            font-size: 0.85rem;
+            color: #4a627a;
         }
 
+        /* FILTER PANEL */
+        .filter-panel {
+            background: white;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 160px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4a5568;
+        }
+
+        .filter-group input, .filter-group select {
+            padding: 10px 12px;
+            border: 1.5px solid #cbd5e0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #2c6e9e;
+            box-shadow: 0 0 0 3px rgba(44,110,158,0.2);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-filter {
+            background: #2c6e9e;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 32px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-filter:hover {
+            background: #1e4a6e;
+        }
+
+        .btn-reset {
+            background: #e2e8f0;
+            color: #2d3748;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 32px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reset:hover {
+            background: #cbd5e0;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .badge-toll { background: #fee2e2; color: #b91c1c; }
+        .badge-parking { background: #e0f2fe; color: #0c4a6e; }
+
         .search-section {
-            padding: 20px;
-            background: #fff;
-            border-bottom: 1px solid #e1e8ed;
+            padding: 15px 25px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             align-items: center;
-            justify-content: center;
         }
 
         .search-input {
-            flex: 1;
-            min-width: 300px;
-            padding: 15px;
-            border: 2px solid #bdc3c7;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            transition: border-color 0.3s;
+            flex: 2;
+            min-width: 260px;
+            padding: 12px 18px;
+            border: 1.5px solid #cbd5e0;
+            border-radius: 40px;
+            font-size: 1rem;
         }
 
         .search-input:focus {
+            border-color: #2c6e9e;
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         .search-btn {
-            background: #3498db;
+            background: #2c6e9e;
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
+            padding: 12px 28px;
+            border-radius: 40px;
             font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .search-btn:hover {
-            background: #2980b9;
-        }
-
-        .instructions {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px auto;
-            max-width: 800px;
-            text-align: left;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .instructions h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .instructions ol {
-            padding-left: 20px;
-            line-height: 1.6;
-        }
-
-        .instructions li {
-            margin-bottom: 10px;
+            cursor: pointer;
         }
 
         .results-section {
-            padding: 20px;
+            padding: 25px;
+            background: #fefefe;
         }
 
         .plate-summary {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 32px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #edf2f7;
         }
 
         .plate-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e1e8ed;
+            padding: 18px 22px;
+            background: #f9fbfd;
+            border-bottom: 2px solid #e2edf7;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .plate-number {
             font-size: 1.4rem;
-            font-weight: 700;
-            color: #e74c3c;
+            font-weight: 800;
+            color: #c2410c;
+            background: #fff2e6;
+            padding: 5px 14px;
+            border-radius: 40px;
         }
 
         .plate-total {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #27ae60;
-            background: rgba(39, 174, 96, 0.1);
-            padding: 8px 15px;
-            border-radius: 6px;
+            background: #eef2ff;
+            padding: 6px 18px;
+            border-radius: 32px;
+            color: #1f6392;
         }
 
         .transaction-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            overflow: hidden;
         }
 
         .transaction-table th {
-            background: #34495e;
-            color: white;
+            background: #f1f5f9;
+            padding: 14px 16px;
             text-align: left;
-            padding: 16px;
-            font-weight: 600;
+            font-weight: 700;
+            color: #1e3a5f;
+            font-size: 0.85rem;
         }
 
         .transaction-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-
-        .transaction-table tr:nth-child(even) {
-            background: #f8f9fa;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef2f6;
+            vertical-align: middle;
         }
 
         .transaction-table tr:hover {
-            background: #e8f4fc;
-        }
-
-        .transaction-id {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .location {
-            max-width: 300px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            background: #fafcff;
         }
 
         .transaction-amount {
-            font-weight: 600;
-            color: #27ae60;
+            font-weight: 700;
+            color: #2b6e3c;
         }
 
         .negative-amount {
-            color: #e74c3c;
+            color: #b91c1c;
         }
 
         .no-results {
             text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-            font-size: 1.2rem;
+            padding: 48px 20px;
+            color: #5a6e85;
+            font-size: 1.1rem;
         }
 
-        .summary-section {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
-        }
-
-        .summary-title {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .summary-stats {
+        .summary-stats-grid {
             display: flex;
-            justify-content: space-around;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 18px;
+            margin-bottom: 28px;
+            background: #eef3fa;
+            padding: 20px;
+            border-radius: 24px;
         }
 
-        .stat-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 16px;
+            border-radius: 20px;
             text-align: center;
-            min-width: 150px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
 
         .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 5px 0;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #1f6392;
         }
 
         .plate-list {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 8px;
         }
 
         .plate-chip {
-            background: #3498db;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            background: #e2e8f0;
+            color: #2c3e66;
+            padding: 6px 16px;
+            border-radius: 32px;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: 0.2s;
         }
 
         .plate-chip:hover {
-            background: #2980b9;
+            background: #2c6e9e;
+            color: white;
         }
 
-        @media (max-width: 768px) {
-            .transaction-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .plate-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
-
-            .summary-stats {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .search-input {
-                min-width: 100%;
-            }
+        @media (max-width: 780px) {
+            .filter-panel { flex-direction: column; align-items: stretch; }
+            .transaction-table { display: block; overflow-x: auto; }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>Excel Transaction Viewer</h1>
-            <p class="description">Upload an Excel file to view transactions grouped by license plate with total amounts
-            </p>
-        </header>
+<div class="container">
+    <header>
+        <h1>📊 Transaction Analyzer</h1>
+        <p class="description">Upload Excel → Filter by date/time range & transaction type (Parking/Toll) → Group by license plate</p>
+    </header>
 
-        <section class="upload-section">
-            <div class="file-input-container">
-                <label for="fileInput" class="file-input-label">Choose Excel File</label>
-                <input type="file" id="fileInput" class="file-input" accept=".xlsx, .xls">
-            </div>
-            <div class="file-name" id="fileName">No file chosen</div>
-        </section>
+    <section class="upload-section">
+        <div class="file-input-container">
+            <label for="fileInput" class="file-input-label">📁 Upload Excel (.xlsx, .xls)</label>
+            <input type="file" id="fileInput" class="file-input" accept=".xlsx, .xls">
+        </div>
+        <div class="file-name" id="fileName">No file selected</div>
+    </section>
 
-        <section class="search-section" id="searchSection" style="display: none;">
-            <input type="text" class="search-input" id="plateSearch"
-                placeholder="Enter license plate number (e.g., TX - VSN2039)">
-            <button class="search-btn" id="searchBtn">Search Transactions</button>
-        </section>
-
-        <section class="instructions">
-            <h3>How to use this tool:</h3>
-            <ol>
-                <li>Click "Choose Excel File" to upload your transaction history Excel file</li>
-                <li>Ensure your Excel file has columns for Transaction ID, Location, Plate, and Transaction Amount</li>
-                <li>Use the search box to find transactions for a specific license plate</li>
-                <li>Click on any plate number to quickly search for that plate</li>
-                <li>The application will show the total transaction amount for the searched license plate</li>
-            </ol>
-        </section>
-
-        <section class="results-section" id="resultsSection">
-            <div class="no-results">Upload an Excel file to view transaction data</div>
-        </section>
+    <!-- FILTER CONTROLS: DATE RANGE + TYPE -->
+    <div class="filter-panel" id="filterPanel" style="display: none;">
+        <div class="filter-group">
+            <label>📅 Start Date & Time</label>
+            <input type="datetime-local" id="startDateTime" step="1">
+        </div>
+        <div class="filter-group">
+            <label>📅 End Date & Time</label>
+            <input type="datetime-local" id="endDateTime" step="1">
+        </div>
+        <div class="filter-group">
+            <label>🏷️ Transaction Type</label>
+            <select id="txnTypeFilter">
+                <option value="all">All (Toll + Parking)</option>
+                <option value="toll">🛣️ Toll Only</option>
+                <option value="parking">🅿️ Parking Only</option>
+            </select>
+        </div>
+        <div class="filter-actions">
+            <button class="btn-filter" id="applyFilterBtn">🔍 Apply Filters</button>
+            <button class="btn-reset" id="resetFiltersBtn">⟳ Reset</button>
+        </div>
     </div>
 
-    <script>
-        // Global variable to store all transactions data
-        let allTransactionsData = [];
-        let transactionsByPlate = {};
+    <section class="search-section" id="searchSection" style="display: none;">
+        <input type="text" class="search-input" id="plateSearch" placeholder="Search by plate number (e.g., TX - VSN2039)">
+        <button class="search-btn" id="searchBtn">Search Plate</button>
+    </section>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const fileInput = document.getElementById('fileInput');
-            const fileName = document.getElementById('fileName');
-            const resultsSection = document.getElementById('resultsSection');
-            const searchSection = document.getElementById('searchSection');
-            const plateSearch = document.getElementById('plateSearch');
-            const searchBtn = document.getElementById('searchBtn');
+    <section class="instructions" style="padding: 15px 25px; background:#fef9e6; font-size:0.9rem; border-bottom:1px solid #ffe6b3;">
+        💡 <strong>Smart Classification:</strong> Automatically detects "Parking"/"Toll" from location/description columns. <br>
+        ⏱️ Date filter: uses 'Transaction Entry Date/Time', 'Date', 'TIME' columns. Leave empty to ignore.
+    </section>
 
-            // Update file name when a file is selected
-            fileInput.addEventListener('change', function () {
-                if (this.files.length > 0) {
-                    fileName.textContent = this.files[0].name;
-                    processExcelFile(this.files[0]);
-                } else {
-                    fileName.textContent = 'No file chosen';
-                }
-            });
+    <section class="results-section" id="resultsSection">
+        <div class="no-results">✨ Upload an Excel file to view transactions with powerful date & type filters</div>
+    </section>
+</div>
 
-            // Add event listener to search button
-            searchBtn.addEventListener('click', searchTransactions);
+<script>
+    // ---------- GLOBAL STATE ----------
+    let rawTransactions = [];         // original parsed rows with enriched fields
+    let currentFilteredData = [];     // after date+type filtering
+    let currentPlateMap = {};         // grouped data based on filtered data
 
-            // Add event listener for Enter key in search input
-            plateSearch.addEventListener('keyup', function (event) {
-                if (event.key === 'Enter') {
-                    searchTransactions();
-                }
-            });
+    // Helper: detect transaction type (parking or toll) based on keywords in location/description
+    function detectTransactionType(row) {
+        const location = (row['Location'] || row['LOCATION'] || row['Toll Location'] || row['Location Name'] || '').toLowerCase();
+        const description = (row['Description'] || row['Transaction Description'] || row['Remarks'] || '').toLowerCase();
+        const combined = location + " " + description;
+        
+        if (combined.includes('parking') || combined.includes('park') || combined.includes('garage') || combined.includes('lot')) {
+            return 'parking';
+        }
+        if (combined.includes('toll') || combined.includes('turnpike') || combined.includes('express') || combined.includes('highway')) {
+            return 'toll';
+        }
+        // fallback: if amount positive/negative? but we keep neutral -> classify based on default context (maybe 'toll' if not sure, but safer as 'toll')
+        return 'toll';   // default most transactions are tolls, but user can filter
+    }
 
-            function processExcelFile(file) {
-                const reader = new FileReader();
+    // parse datetime from various column formats
+    function parseTransactionDateTime(row) {
+        let rawDate = row['Transaction Entry Date/Time'] || row['Entry Date/Time'] || row['Date'] || row['TIME'] || row['Transaction Date'] || null;
+        if (!rawDate) return null;
+        // try to parse using dayjs (flexible)
+        let parsed = dayjs(rawDate);
+        if (parsed.isValid()) return parsed;
+        // fallback: try new Date
+        let jsDate = new Date(rawDate);
+        if (!isNaN(jsDate.getTime())) return dayjs(jsDate);
+        return null;
+    }
 
-                reader.onload = function (e) {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
+    // apply date range + type filter to rawTransactions
+    function applyFilters(startDateMoment, endDateMoment, typeFilter) {
+        if (!rawTransactions.length) return [];
 
-                        // Get the first worksheet
-                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-                        // Convert to JSON
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-                        // Store the data globally
-                        allTransactionsData = jsonData;
-
-                        // Process the data
-                        processTransactionData(jsonData);
-
-                        // Show the search section
-                        searchSection.style.display = 'flex';
-                    } catch (error) {
-                        resultsSection.innerHTML = `<div class="no-results">Error processing file: ${error.message}</div>`;
-                    }
-                };
-
-                reader.onerror = function () {
-                    resultsSection.innerHTML = '<div class="no-results">Error reading file. Please try again.</div>';
-                };
-
-                reader.readAsArrayBuffer(file);
+        let filtered = rawTransactions.filter(txn => {
+            // Date filter
+            if (startDateMoment && txn.parsedDate) {
+                if (txn.parsedDate.isBefore(startDateMoment)) return false;
             }
-
-            function processTransactionData(data) {
-                if (data.length === 0) {
-                    resultsSection.innerHTML = '<div class="no-results">No data found in the Excel file.</div>';
-                    return;
-                }
-
-                // Reset transactionsByPlate
-                transactionsByPlate = {};
-                let totalAmount = 0;
-                let totalTransactions = 0;
-
-                data.forEach(row => {
-
-                    //Transaction entry date/time
-                    const entryDateTime = row['Transaction Entry Date/Time'] || row['Date'] || row['TIME'] || 'Unknown';
-                    //Transaction Exit time
-                    const exitDateTime = row['Transaction Exit Date/Time'] || row['Date'] || row['TIME'] || 'Unknown';
-                    // Try to find the plate number in various possible column names
-                    const plate = row['Plate'] || row['plate'] || row['PLATE'] ||
-                        row['Plate Number'] || row['License Plate'] ||
-                        row['Plate No'] || 'Unknown';
-
-                    // Try to find the amount in various possible column names
-                    const amount = parseFloat(row['Transaction Amount'] || row['Amount'] ||
-                        row['AMOUNT'] || row['Toll Amount'] ||
-                        row['TransactionAmount'] || 0);
-
-                    // Try to find the transaction ID
-                    const id = row['Transaction ID'] || row['ID'] || row['TransactionID'] ||
-                        row['Txn ID'] || 'N/A';
-
-                    // Try to find the location
-                    const location = row['Location'] || row['LOCATION'] ||
-                        row['Toll Location'] || 'Unknown Location';
-
-                    if (!transactionsByPlate[plate]) {
-                        transactionsByPlate[plate] = {
-                            transactions: [],
-                            total: 0
-                        };
-                    }
-
-                    transactionsByPlate[plate].transactions.push({
-                        id: id,
-                        location: location,
-                        amount: amount,
-                        entryDateTime: entryDateTime,
-                        exitDateTime: exitDateTime
-                    });
-
-                    transactionsByPlate[plate].total += Math.abs(amount);
-                    totalAmount += Math.abs(amount);
-                    totalTransactions++;
-                });
-
-                // Display all plates initially
-                displayAllPlates(totalTransactions, totalAmount);
+            if (endDateMoment && txn.parsedDate) {
+                if (txn.parsedDate.isAfter(endDateMoment)) return false;
             }
-
-            function displayAllPlates(totalTransactions, totalAmount) {
-                // Generate HTML for the results
-                let resultsHTML = '';
-
-                // Add summary section
-                resultsHTML += `
-                    <div class="summary-section">
-                        <div class="summary-title">All Transactions Summary</div>
-                        <div class="summary-stats">
-                            <div class="stat-box">
-                                <div class="stat-value">${Object.keys(transactionsByPlate).length}</div>
-                                <div class="stat-label">License Plates</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">${totalTransactions}</div>
-                                <div class="stat-label">Total Transactions</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">$${totalAmount.toFixed(2)}</div>
-                                <div class="stat-label">Total Amount</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Add plate list for quick searching
-                resultsHTML += `
-                    <div class="plate-summary">
-                        <div class="plate-header">
-                            <div class="plate-number">All License Plates</div>
-                            <div class="plate-total">Click to search</div>
-                        </div>
-                        <div class="plate-list">
-                `;
-
-                // Sort plates alphabetically
-                const sortedPlates = Object.keys(transactionsByPlate).sort();
-
-                sortedPlates.forEach(plate => {
-                    resultsHTML += `<div class="plate-chip" data-plate="${plate}">${plate}</div>`;
-                });
-
-                resultsHTML += `
-                        </div>
-                    </div>
-                `;
-
-                // Add transactions for each plate
-                for (const plate of sortedPlates) {
-                    const plateData = transactionsByPlate[plate];
-
-                    resultsHTML += `
-                        <div class="plate-summary">
-                            <div class="plate-header">
-                                <div class="plate-number">${plate}</div>
-                                <div class="plate-total">Total: $${plateData.total.toFixed(2)}</div>
-                            </div>
-                            <table class="transaction-table">
-                                <thead>
-                                    <tr>
-                                        <th>Entry Date & Time</th>
-                                        <th>Exit Date & Time</th>
-                                        <th>Transaction ID</th>
-                                        <th>Location</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-
-                    plateData.transactions.forEach(transaction => {
-                        resultsHTML += `
-                            <tr>
-                                <td class="entry-datetime">${transaction.entryDateTime}</td>
-                                <td class="exit-datetime">${transaction.exitDateTime}</td>
-                                <td class="transaction-id">${transaction.id}</td>
-                                <td class="location">${transaction.location}</td>
-                                <td class="transaction-amount negative-amount">$${Math.abs(transaction.amount).toFixed(2)}</td>
-                            </tr>
-                        `;
-                    });
-
-                    resultsHTML += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-
-                resultsSection.innerHTML = resultsHTML;
-
-                // Add event listeners to plate chips
-                document.querySelectorAll('.plate-chip').forEach(chip => {
-                    chip.addEventListener('click', function () {
-                        const plate = this.getAttribute('data-plate');
-                        plateSearch.value = plate;
-                        searchTransactions();
-                    });
-                });
+            // Type filter
+            if (typeFilter !== 'all') {
+                if (txn.transactionType !== typeFilter) return false;
             }
+            return true;
+        });
+        return filtered;
+    }
 
-            function searchTransactions() {
-                const searchTerm = plateSearch.value.trim();
+    // rebuild grouped data from filtered array and render
+    function renderGroupedTransactions(filteredList, searchPlateTerm = '') {
+        if (!filteredList.length) {
+            document.getElementById('resultsSection').innerHTML = `<div class="no-results">🚫 No transactions match the selected filters / date range. Try adjusting filters or upload another file.</div>`;
+            return;
+        }
 
-                if (!searchTerm) {
-                    // If search is empty, show all plates
-                    processTransactionData(allTransactionsData);
-                    return;
-                }
-
-                // Find matching plates
-                const matchingPlates = Object.keys(transactionsByPlate).filter(plate =>
-                    plate.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-
-                if (matchingPlates.length === 0) {
-                    resultsSection.innerHTML = `<div class="no-results">No transactions found for license plate: ${searchTerm}</div>`;
-                    return;
-                }
-
-                // Calculate total for matching plates
-                let totalAmount = 0;
-                let totalTransactions = 0;
-
-                matchingPlates.forEach(plate => {
-                    totalAmount += transactionsByPlate[plate].total;
-                    totalTransactions += transactionsByPlate[plate].transactions.length;
-                });
-
-                // Generate HTML for the results
-                let resultsHTML = '';
-
-                // Add summary section
-                resultsHTML += `
-                    <div class="summary-section">
-                        <div class="summary-title">Search Results for "${searchTerm}"</div>
-                        <div class="summary-stats">
-                            <div class="stat-box">
-                                <div class="stat-value">${matchingPlates.length}</div>
-                                <div class="stat-label">Matching Plates</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">${totalTransactions}</div>
-                                <div class="stat-label">Total Transactions</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">$${totalAmount.toFixed(2)}</div>
-                                <div class="stat-label">Total Amount</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Add transactions for each matching plate
-                for (const plate of matchingPlates) {
-                    const plateData = transactionsByPlate[plate];
-
-                    resultsHTML += `
-                        <div class="plate-summary">
-                            <div class="plate-header">
-                                <div class="plate-number">${plate}</div>
-                                <div class="plate-total">Total: $${plateData.total.toFixed(2)}</div>
-                            </div>
-                            <table class="transaction-table">
-                                <thead>
-                                    <tr>
-                                        <th>Entry Date & Time</th>
-                                        <th>Exit Date & Time</th>
-                                        <th>Transaction ID</th>
-                                        <th>Location</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-
-                    plateData.transactions.forEach(transaction => {
-                        resultsHTML += `
-                            <tr>
-                                <td class="entry-datetime">${transaction.entryDateTime}</td>
-                                <td class="exit-datetime">${transaction.exitDateTime}</td>
-                                <td class="transaction-id">${transaction.id}</td>
-                                <td class="location">${transaction.location}</td>
-                                <td class="transaction-amount negative-amount">$${Math.abs(transaction.amount).toFixed(2)}</td>
-                            </tr>
-                        `;
-                    });
-
-                    resultsHTML += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-
-                resultsSection.innerHTML = resultsHTML;
+        // Group by plate
+        let plateGroup = {};
+        filteredList.forEach(txn => {
+            let plate = txn.plate || 'Unknown Plate';
+            if (!plateGroup[plate]) {
+                plateGroup[plate] = { transactions: [], total: 0 };
             }
+            plateGroup[plate].transactions.push(txn);
+            plateGroup[plate].total += Math.abs(txn.amount);
+        });
 
-            // Add drag and drop functionality
-            const uploadSection = document.querySelector('.upload-section');
+        // Filter by search term if present
+        let matchingPlates = Object.keys(plateGroup);
+        if (searchPlateTerm.trim() !== '') {
+            matchingPlates = matchingPlates.filter(plate => plate.toLowerCase().includes(searchPlateTerm.toLowerCase()));
+        }
 
-            uploadSection.addEventListener('dragover', function (e) {
-                e.preventDefault();
-                this.style.background = '#d6dbdf';
-            });
+        if (matchingPlates.length === 0) {
+            document.getElementById('resultsSection').innerHTML = `<div class="no-results">🔍 No plates found matching "${searchPlateTerm}" with current filters.</div>`;
+            return;
+        }
 
-            uploadSection.addEventListener('dragleave', function () {
-                this.style.background = '#ecf0f1';
-            });
-
-            uploadSection.addEventListener('drop', function (e) {
-                e.preventDefault();
-                this.style.background = '#ecf0f1';
-
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    fileName.textContent = e.dataTransfer.files[0].name;
-                    processExcelFile(e.dataTransfer.files[0]);
-                }
+        // Compute overall stats
+        let totalAmountAll = 0, totalTxnsAll = 0, totalTollAmt = 0, totalParkAmt = 0;
+        matchingPlates.forEach(plate => {
+            const group = plateGroup[plate];
+            group.transactions.forEach(t => {
+                totalAmountAll += Math.abs(t.amount);
+                totalTxnsAll++;
+                if (t.transactionType === 'toll') totalTollAmt += Math.abs(t.amount);
+                else totalParkAmt += Math.abs(t.amount);
             });
         });
-    </script>
-</body>
 
+        let html = `
+            <div class="summary-stats-grid">
+                <div class="stat-card"><div class="stat-value">${matchingPlates.length}</div><div>Plates Found</div></div>
+                <div class="stat-card"><div class="stat-value">${totalTxnsAll}</div><div>Transactions</div></div>
+                <div class="stat-card"><div class="stat-value">$${totalAmountAll.toFixed(2)}</div><div>Total Amount</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#b91c1c;">$${totalTollAmt.toFixed(2)}</div><div>Tolls</div></div>
+                <div class="stat-card"><div class="stat-value" style="color:#0c4a6e;">$${totalParkAmt.toFixed(2)}</div><div>Parking</div></div>
+            </div>
+            <div class="plate-summary">
+                <div class="plate-header">
+                    <div class="plate-number">📋 All License Plates (click to search)</div>
+                    <div class="plate-total">Quick navigation</div>
+                </div>
+                <div class="plate-list" id="plateChipsContainer">
+                    ${matchingPlates.map(plate => `<div class="plate-chip" data-plate="${plate.replace(/"/g, '&quot;')}">${escapeHtml(plate)}</div>`).join('')}
+                </div>
+            </div>
+        `;
+
+        // Render each plate with transactions
+        for (let plate of matchingPlates) {
+            const group = plateGroup[plate];
+            const sortedTx = group.transactions.sort((a,b) => (b.parsedDate?.valueOf() || 0) - (a.parsedDate?.valueOf() || 0));
+            html += `
+                <div class="plate-summary" id="plate-${plate.replace(/\s/g, '_')}">
+                    <div class="plate-header">
+                        <div class="plate-number">${escapeHtml(plate)}</div>
+                        <div class="plate-total">💰 Total: $${group.total.toFixed(2)}</div>
+                    </div>
+                    <table class="transaction-table">
+                        <thead>
+                            <tr><th>Entry DateTime</th><th>Exit DateTime</th><th>Transaction ID</th><th>Location</th><th>Type</th><th>Amount</th></tr>
+                        </thead>
+                        <tbody>
+            `;
+            sortedTx.forEach(t => {
+                const entryDisplay = t.entryDateTimeRaw || '—';
+                const exitDisplay = t.exitDateTimeRaw || '—';
+                const typeLabel = t.transactionType === 'toll' ? '<span class="type-badge badge-toll">🛣️ Toll</span>' : '<span class="type-badge badge-parking">🅿️ Parking</span>';
+                const amountClass = t.amount < 0 ? 'negative-amount' : 'transaction-amount';
+                html += `
+                    <tr>
+                        <td>${escapeHtml(entryDisplay)}</td>
+                        <td>${escapeHtml(exitDisplay)}</td>
+                        <td class="transaction-id">${escapeHtml(t.id)}</td>
+                        <td class="location">${escapeHtml(t.location)}</td>
+                        <td>${typeLabel}</td>
+                        <td class="${amountClass}">$${Math.abs(t.amount).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table></div>`;
+        }
+
+        document.getElementById('resultsSection').innerHTML = html;
+
+        // attach chip click events
+        document.querySelectorAll('.plate-chip').forEach(chip => {
+            chip.addEventListener('click', function(e) {
+                const plateVal = this.getAttribute('data-plate');
+                const searchBox = document.getElementById('plateSearch');
+                if (searchBox) searchBox.value = plateVal;
+                refreshWithCurrentFiltersAndSearch(plateVal);
+            });
+        });
+    }
+
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // main function that applies date, type, and search then re-render
+    function refreshWithCurrentFiltersAndSearch(overrideSearch = null) {
+        let startDateInput = document.getElementById('startDateTime').value;
+        let endDateInput = document.getElementById('endDateTime').value;
+        let typeVal = document.getElementById('txnTypeFilter').value;
+
+        let startMoment = startDateInput ? dayjs(startDateInput) : null;
+        let endMoment = endDateInput ? dayjs(endDateInput) : null;
+
+        let filtered = applyFilters(startMoment, endMoment, typeVal);
+        currentFilteredData = filtered;
+        
+        let searchTerm = (overrideSearch !== null) ? overrideSearch : document.getElementById('plateSearch').value.trim();
+        renderGroupedTransactions(filtered, searchTerm);
+    }
+
+    // process excel: parse rows, enrich with type and parsed date
+    function processExcelAndStore(dataRows) {
+        if (!dataRows.length) {
+            alert("Excel file appears empty.");
+            return;
+        }
+        rawTransactions = [];
+        for (let row of dataRows) {
+            // extract fields
+            let plate = row['Plate'] || row['plate'] || row['PLATE'] || row['Plate Number'] || row['License Plate'] || row['Plate No'] || 'Unknown';
+            let amountRaw = row['Transaction Amount'] ?? row['Amount'] ?? row['AMOUNT'] ?? row['Toll Amount'] ?? row['TransactionAmount'] ?? 0;
+            let amount = parseFloat(amountRaw);
+            if (isNaN(amount)) amount = 0;
+            let id = row['Transaction ID'] || row['ID'] || row['TransactionID'] || row['Txn ID'] || 'N/A';
+            let location = row['Location'] || row['LOCATION'] || row['Toll Location'] || row['Location Name'] || 'Unknown Location';
+            let entryDateTimeRaw = row['Transaction Entry Date/Time'] || row['Entry Date/Time'] || row['Date'] || row['TIME'] || '';
+            let exitDateTimeRaw = row['Transaction Exit Date/Time'] || row['Exit Date/Time'] || '';
+            
+            let parsedDate = parseTransactionDateTime(row);
+            let transactionType = detectTransactionType(row);
+            
+            rawTransactions.push({
+                plate: String(plate).trim(),
+                amount: amount,
+                id: String(id),
+                location: String(location),
+                entryDateTimeRaw: entryDateTimeRaw,
+                exitDateTimeRaw: exitDateTimeRaw,
+                parsedDate: parsedDate,
+                transactionType: transactionType,
+                rawRow: row
+            });
+        }
+        
+        // show filter panel & search
+        document.getElementById('filterPanel').style.display = 'flex';
+        document.getElementById('searchSection').style.display = 'flex';
+        
+        // set default datetime-local range (optional: last 30 days? no, keep empty initially)
+        // reset date inputs to empty for full view
+        document.getElementById('startDateTime').value = '';
+        document.getElementById('endDateTime').value = '';
+        document.getElementById('txnTypeFilter').value = 'all';
+        document.getElementById('plateSearch').value = '';
+        
+        // apply empty filters -> show all data
+        let allFiltered = applyFilters(null, null, 'all');
+        currentFilteredData = allFiltered;
+        renderGroupedTransactions(allFiltered, '');
+    }
+
+    // handle file reading
+    function handleExcelFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(firstSheet);
+                if (json.length === 0) {
+                    document.getElementById('resultsSection').innerHTML = '<div class="no-results">⚠️ Excel sheet has no data rows.</div>';
+                    return;
+                }
+                processExcelAndStore(json);
+            } catch (err) {
+                document.getElementById('resultsSection').innerHTML = `<div class="no-results">❌ Error parsing file: ${err.message}</div>`;
+            }
+        };
+        reader.onerror = () => { alert("File read error"); };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // ---- EVENT LISTENERS ----
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const fileNameSpan = document.getElementById('fileName');
+        
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                fileNameSpan.textContent = this.files[0].name;
+                handleExcelFile(this.files[0]);
+            } else {
+                fileNameSpan.textContent = 'No file chosen';
+            }
+        });
+        
+        // Filter buttons
+        document.getElementById('applyFilterBtn').addEventListener('click', () => {
+            refreshWithCurrentFiltersAndSearch();
+        });
+        document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+            document.getElementById('startDateTime').value = '';
+            document.getElementById('endDateTime').value = '';
+            document.getElementById('txnTypeFilter').value = 'all';
+            document.getElementById('plateSearch').value = '';
+            if (rawTransactions.length) {
+                let fullFiltered = applyFilters(null, null, 'all');
+                currentFilteredData = fullFiltered;
+                renderGroupedTransactions(fullFiltered, '');
+            } else {
+                document.getElementById('resultsSection').innerHTML = '<div class="no-results">Reset filters. Upload file first.</div>';
+            }
+        });
+        
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            refreshWithCurrentFiltersAndSearch();
+        });
+        const searchInput = document.getElementById('plateSearch');
+        if(searchInput) {
+            searchInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') refreshWithCurrentFiltersAndSearch(); });
+        }
+        
+        // Drag & drop
+        const uploadDiv = document.querySelector('.upload-section');
+        uploadDiv.addEventListener('dragover', (e) => { e.preventDefault(); uploadDiv.style.background = '#eef2f8'; });
+        uploadDiv.addEventListener('dragleave', () => { uploadDiv.style.background = '#f8fafc'; });
+        uploadDiv.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadDiv.style.background = '#f8fafc';
+            if(e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileNameSpan.textContent = e.dataTransfer.files[0].name;
+                handleExcelFile(e.dataTransfer.files[0]);
+            }
+        });
+    });
+</script>
+</body>
 </html>
