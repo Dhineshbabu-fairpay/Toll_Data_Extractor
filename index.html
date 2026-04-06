@@ -399,11 +399,6 @@
         <button class="search-btn" id="searchBtn">Search Plate</button>
     </section>
 
-    <section class="instructions" style="padding: 15px 25px; background:#fef9e6; font-size:0.9rem; border-bottom:1px solid #ffe6b3;">
-        💡 <strong>Smart Classification:</strong> Automatically detects "Parking"/"Toll" from location/description columns. <br>
-        ⏱️ Date filter: uses 'Transaction Entry Date/Time', 'Date', 'TIME' columns. Leave empty to ignore.
-    </section>
-
     <section class="results-section" id="resultsSection">
         <div class="no-results">✨ Upload an Excel file to view transactions with powerful date & type filters</div>
     </section>
@@ -537,17 +532,19 @@
                     </div>
                     <table class="transaction-table">
                         <thead>
-                            <tr><th>Entry DateTime</th><th>Exit DateTime</th><th>Transaction ID</th><th>Location</th><th>Type</th><th>Amount</th></tr>
+                            <tr><th>Plate No</th><th>Entry DateTime</th><th>Exit DateTime</th><th>Transaction ID</th><th>Location</th><th>Type</th><th>Amount</th></tr>
                         </thead>
                         <tbody>
             `;
             sortedTx.forEach(t => {
+                const plateNom = t.plate;
                 const entryDisplay = t.entryDateTimeRaw || '—';
                 const exitDisplay = t.exitDateTimeRaw || '—';
                 const typeLabel = t.transactionType === 'toll' ? '<span class="type-badge badge-toll">🛣️ Toll</span>' : '<span class="type-badge badge-parking">🅿️ Parking</span>';
                 const amountClass = t.amount < 0 ? 'negative-amount' : 'transaction-amount';
                 html += `
                     <tr>
+                        <td>${plateNom}</td>
                         <td>${escapeHtml(entryDisplay)}</td>
                         <td>${escapeHtml(exitDisplay)}</td>
                         <td class="transaction-id">${escapeHtml(t.id)}</td>
